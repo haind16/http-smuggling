@@ -1,64 +1,25 @@
-version: '3.8'
+version: "3"
 
 services:
-  # Frontend proxy server
-  frontend:
-    image: nginx:alpine
-    container_name: http-smuggling-frontend
+  haproxy:
+    build: haproxy
     ports:
-      - "8080:80"
-    volumes:
-      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./frontend/html:/usr/share/nginx/html:ro
-    networks:
-      - smuggling-net
-    depends_on:
-      - backend-te-cl
-      - backend-cl-te
-      - backend-obfuscate
+      - "8001:8001"
+    links:
+      - "secret_server"
+    environment:
+      - SERVER_HOSTNAME=secret_server
+      - SERVER_PORT=8000
 
-  # Backend 1: TE.CL vulnerability (xử lý Transfer-Encoding, ignore Content-Length)
-  backend-te-cl:
-    image: nginx:alpine
-    container_name: backend-te-cl
-    volumes:
-      - ./backend-te-cl/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./backend-te-cl/html:/usr/share/nginx/html:ro
-    networks:
-      - smuggling-net
+  mitmproxy:
+    build: mitmproxy
+    ports:
+      - "8002:8002"
+    links:
+      - "secret_server"
+    environment:
+      - SERVER_HOSTNAME=secret_server
+      - SERVER_PORT=8000
 
-  # Backend 2: CL.TE vulnerability (xử lý Content-Length, ignore Transfer-Encoding)
-  backend-cl-te:
-    image: nginx:alpine
-    container_name: backend-cl-te
-    volumes:
-      - ./backend-cl-te/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./backend-cl-te/html:/usr/share/nginx/html:ro
-    networks:
-      - smuggling-net
-
-  # Backend 3: Obfuscated TE (xử lý Transfer-Encoding bị obfuscate)
-  backend-obfuscate:
-    image: nginx:alpine
-    container_name: backend-obfuscate
-    volumes:
-      - ./backend-obfuscate/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./backend-obfuscate/html:/usr/share/nginx/html:ro
-    networks:
-      - smuggling-net
-
-  # PHP-FPM cho xử lý PHP
-  php-fpm:
-    image: php:8.2-fpm-alpine
-    container_name: php-fpm
-    volumes:
-      - ./frontend/html:/usr/share/nginx/html:ro
-      - ./backend-te-cl/html:/var/www/te-cl:ro
-      - ./backend-cl-te/html:/var/www/cl-te:ro
-      - ./backend-obfuscate/html:/var/www/obfuscate:ro
-    networks:
-      - smuggling-net
-
-networks:
-  smuggling-net:
-    driver: bridge
+  secret_server:
+    build: gunicornserver
