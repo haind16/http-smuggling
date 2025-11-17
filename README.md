@@ -11,13 +11,13 @@
    ```bash
    docker-compose up -d
    ```
-3. Truy cập http://<IPVM>:8081
-4. Truy cập http://<IPVM>:8082
+3. Truy cập http://IPVM:8081
+4. Truy cập http://IPVM:8082
 
 ## Các Lab
 
 ### Lab 1: CL.TE
-- **Endpoint:** http://<IPVM>:8081
+- **Endpoint:** http://IPVM:8081
 - **Mục tiêu:** Truy cập /admin bị restrict
 - **Frontend:** Xử lý Content-Length
 - **Backend:** Xử lý Transfer-Encoding
@@ -37,7 +37,7 @@ Host: 0.0.0.0:8001
 - Ở Repeater: Vào **Hex** --> chuyển space (20) ở sau dấu (:) **Transfer-Encoding** thành **0b** --> Send **2 lần**
 
 ### Lab 2: TE.CL 
-- **Endpoint:** http://<IPVM>:8082
+- **Endpoint:** http://IPVM:8082
 - **Mục tiêu:** Truy cập /admin bị restrict
 - **Backend:** Xử lý Content-Length
 - **Frontend:** Xử lý Transfer-Encoding
